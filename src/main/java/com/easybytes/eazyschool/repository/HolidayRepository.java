@@ -4,6 +4,7 @@ import com.easybytes.eazyschool.model.Contact;
 import com.easybytes.eazyschool.model.Holiday;
 import com.easybytes.eazyschool.rommappers.ContactRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -25,6 +26,7 @@ public class HolidayRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+
     @Autowired
     public HolidayRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -37,3 +39,5 @@ public class HolidayRepository {
     }
 
 }
+
+

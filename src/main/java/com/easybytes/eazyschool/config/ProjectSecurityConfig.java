@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 public class ProjectSecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().ignoringRequestMatchers("/saveMsg").ignoringRequestMatchers("/h2-console/**").and()
+        http.csrf().ignoringRequestMatchers("/saveMsg").ignoringRequestMatchers("/h2-console/**").ignoringRequestMatchers("/public/**").and()
                 .authorizeRequests()
                 .requestMatchers("/dashboard").authenticated()
                 .requestMatchers("/displayMessages").hasRole("ADMIN")
@@ -28,9 +28,12 @@ public class ProjectSecurityConfig  {
                 .requestMatchers("/contact").permitAll()
                 .requestMatchers("/about").permitAll()
                 .requestMatchers("/Holidays/**").permitAll()
-                .requestMatchers("/save Msg").permitAll()
-                .requestMatchers("/Courses").permitAll().
-                and().formLogin().loginPage("/login")
+                .requestMatchers("/courses").permitAll()
+                .requestMatchers("/saveMsg").permitAll()
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/public/**").permitAll()
+
+                .and().formLogin().loginPage("/login")
                 .defaultSuccessUrl("/dashboard").failureUrl("/login?error=true").permitAll()
                 .and().logout().logoutSuccessUrl("/login?logout=true").invalidateHttpSession(true).permitAll()
                 .and().authorizeRequests().requestMatchers("/h2-console/**").permitAll()
