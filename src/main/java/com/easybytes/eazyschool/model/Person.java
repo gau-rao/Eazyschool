@@ -2,8 +2,9 @@ package com.easybytes.eazyschool.model;
 
 import com.easybytes.eazyschool.annotation.FieldsValueMatch;
 import com.easybytes.eazyschool.annotation.PasswordValidator;
-import com.easybytes.eazyschool.model.BaseEntity;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.*;
@@ -11,8 +12,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+import org.springframework.context.annotation.Scope;
+@Getter
+@Setter
 @Entity
 @FieldsValueMatch.List({
         @FieldsValueMatch(
@@ -69,4 +74,16 @@ public class Person extends BaseEntity {
     @JoinColumn(name = "address_id", referencedColumnName = "addressId",nullable = true)
     private Address address;
 
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "class_id", referencedColumnName = "classId", nullable = true)
+    private EazyClass eazyClass;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "person_courses",
+            joinColumns = {
+                    @JoinColumn(name = "person_id", referencedColumnName = "personId")},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "course_id", referencedColumnName = "courseId")})
+    private Set<Courses> courses = new HashSet<>();
 }

@@ -23,6 +23,8 @@ public class EazySchoolUsernamePwdAuthenticationProvider
 {
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
 
@@ -32,9 +34,9 @@ public class EazySchoolUsernamePwdAuthenticationProvider
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
         Person person = personRepository.readByEmail(email);
-        if(null != person && person.getPersonId()>0){
+        if(null != person && person.getPersonId()>0 && passwordEncoder.matches(pwd, person.getPwd())){
             return new UsernamePasswordAuthenticationToken(
-                    person.getName(), pwd, getGrantedAuthorities(person.getRoles()));
+                    email, null, getGrantedAuthorities(person.getRoles()));
         }else{
             throw new BadCredentialsException("Invalid credentials!");
         }

@@ -9,11 +9,13 @@ import com.easybytes.eazyschool.repository.RolesRepository;
 
 import com.easybytes.eazyschool.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PersonService {
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private PersonRepository personRepository;
 
@@ -24,6 +26,7 @@ public class PersonService {
         boolean isSaved = false;
         Roles role = rolesRepository.getByRoleName(EazySchoolConstants.STUDENT_ROLE);
         person.setRoles(role);
+        person.setPwd(passwordEncoder.encode(person.getPwd()));
         person = personRepository.save(person);
 
         if (null != person && person.getPersonId() > 0)
