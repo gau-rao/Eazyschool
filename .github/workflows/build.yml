@@ -1,0 +1,32 @@
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "**" ]
+
+
+jobs:
+  build-bookmarker-api:
+    name: build Bookmarker-api
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bookmarker-api
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: ./mvnw verify
+      - if:  {{github.ref=='refs/head/main'}}
+        name: Build and publish Docker Image
+        run: |
+          ./mvnw clean package jib:dockerBuild -DSkipTests
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/bookmarker-api
